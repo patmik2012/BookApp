@@ -62,12 +62,19 @@ namespace BookApp.Controllers
         {
             return Ok(_booksService.Update(BkId, updatedBook));
         }
+
         [HttpDelete]
         public IActionResult Delete(int BkId)
         {
             return Ok(_booksService.DeleteAsync(BkId));
         }
 
+        [HttpGet("{year}")]
+        public async Task<ActionResult<IEnumerable<Book>>> GetAllByPublishedYear(int year)
+        {
+            var result = await _booksService.GetAllByPublishedYear(year);
+            return Ok(result);
+        }
 
 
         /*============================

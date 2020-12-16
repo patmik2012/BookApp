@@ -16,7 +16,8 @@ namespace BookApp.Services
         Author Get(int authorId);
         Author Create(Author newAuthor);
         Author Update(int authorId, Author updatedAuthor);
-        Task<IEnumerable<Author>> GetAllByName(string authorName);
+        Task<Author> GetAllByNameAsync(string authorName);
+
 
     };
     public class AuthorService : AbstractService, IAuthorService
@@ -31,14 +32,12 @@ namespace BookApp.Services
             _logger.LogInformation("AuthorService log: " + message);
         }
 
-        //api/authors/create
-        public Author Create(Author newAuthor)
+        //api/authors/getall
+        public async Task<IEnumerable<Author>> GetAll()
         {
-            Log("Create");
-            newAuthor.Id = 0;
-            UnitOfWork.GetRepository<Author>().Create(newAuthor);
-            UnitOfWork.SaveChanges();
-            return newAuthor;
+            Log("GetAll");
+            return UnitOfWork.GetRepository<Author>()
+                .GetAll().Where(a => !a.Deleted);
         }
         //api/authors/get/1
         public Author Get(int authorId)
@@ -47,12 +46,15 @@ namespace BookApp.Services
             return UnitOfWork.GetRepository<Author>()
                 .GetAsQueryable(a => a.Id == authorId && !a.Deleted).FirstOrDefault();
         }
-        //api/authors/getall
-        public async Task<IEnumerable<Author>> GetAll()
+
+        //api/authors/create
+        public Author Create(Author newAuthor)
         {
-            Log("GetAll");
-            return UnitOfWork.GetRepository<Author>()
-                .GetAll().Where(a => !a.Deleted);
+            Log("Create");
+            newAuthor.Id = 0;
+            UnitOfWork.GetRepository<Author>().Create(newAuthor);
+            UnitOfWork.SaveChanges();
+            return newAuthor;
         }
 
         //api/authors/update
@@ -63,12 +65,14 @@ namespace BookApp.Services
             UnitOfWork.SaveChanges();
             return updatedAuthor;
         }
-        public async Task<IEnumerable<Author>> GetAllByName(string authorName)
+
+        //api/authors/testauthor
+        public async Task<Author> GetAllByNameAsync(string authorName)
         {
             Log("GetAllByName");
-            return UnitOfWork.GetRepository<Author>()
-                .GetAsQueryable(a => a.Name == authorName,
-                src => src.Include(a => a.Books));
+            return await UnitOfWork.GetRepository<Author>().GetAsQueryable()
+                .Include(author => author.Books)
+                .FirstOrDefaultAsync(author => author.Name == authorName);
         }
     }
 }

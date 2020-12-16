@@ -23,6 +23,7 @@ namespace BookApp.Services
         Book Create(Book newBook);
         Book Update(int BkId, Book updatedBook);
         Task<IEnumerable<Book>> DeleteAsync(int BkId);
+        Task<IEnumerable<Book>> GetAllByPublishedYear(int year);
     }
 
     public class BookService : AbstractService, IBookService
@@ -152,6 +153,24 @@ namespace BookApp.Services
     
         }
 
+        //api/books/GetByAuthor/1
+        public async Task<IEnumerable<Book>> GetAllByAuthor(int authorId)
+        {
+            Log("GetAllByAuthor(" + authorId + ")");
+            return UnitOfWork.GetRepository<Book>()
+                .GetAsQueryable(b => b.AuthorId == authorId)
+                .OrderBy(book => book.PublishedYear);
+        }
+
+        //api/books/GetAllByPublishedYear/2001
+        public async Task<IEnumerable<Book>> GetAllByPublishedYear(int year)
+        {
+            Log("GetAllByPublishedYear(" + year + ")");
+            return UnitOfWork.GetRepository<Book>()
+                .GetAsQueryable(b => b.PublishedYear == year)
+                .OrderBy(book => book.PublishedYear);
+        }
+
         //api/books/delete/10
         public async Task<IEnumerable<Book>> DeleteAsync(int BkId)
         {
@@ -160,14 +179,5 @@ namespace BookApp.Services
             UnitOfWork.SaveChanges();
             return await GetAll();
         }
-
-        //api/books/GetByAuthor/1
-        public async Task<IEnumerable<Book>> GetAllByAuthor(int authorId)
-        {
-            Log("GetAllByAuthor(" + authorId + ")");
-            return UnitOfWork.GetRepository<Book>()
-                .GetAsQueryable(b => b.AuthorId == authorId)
-                .OrderBy(book => book.PublishedYear);
-        }                
     }
 }

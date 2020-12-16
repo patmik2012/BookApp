@@ -8,7 +8,6 @@ using BookApp.DBContext;
 using System.Linq;
 using System.Threading.Tasks;
 using BookApp.Models;
-using BookApp.Services;
 
 namespace BookApp.Controllers
 {
@@ -53,11 +52,11 @@ namespace BookApp.Controllers
             return Ok(_authorsService.Update(AuthorId, updatedAuthor));
         }
 
-        [HttpGet("{AuthorId}")]
-        public ActionResult<IEnumerable<Author>> GetAllByName(int AuthorId)
+        [HttpGet("{authorName}")]
+        public async Task<ActionResult<IEnumerable<Author>>> GetAllByNameAsync(string authorName)
         {
-            return Ok(_authorsService.Get(AuthorId));
+            var result = await _authorsService.GetAllByNameAsync(authorName);
+            return Ok(result);
         }
-
     }
 }

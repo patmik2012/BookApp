@@ -31,6 +31,5 @@ namespace BookApp.Repository
         bool Exists(Func<TEntity, bool> predicate);
         int DeleteAll();
         int Truncate();
-        IEnumerable<Book> GetAsQueryable(bool v, Func<IQueryable<Book>, IIncludableQueryable<Book, object>> p);
     }
 }
