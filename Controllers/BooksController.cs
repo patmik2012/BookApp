@@ -45,12 +45,11 @@ namespace BookApp.Controllers
             return Ok(result);
         }
         [HttpGet("{title}")]
-        public async Task<ActionResult<IEnumerable<Book>>> GetByTitle(string ttl)
+        public async Task<ActionResult<IEnumerable<Book>>> GetByTitle(string title)
         {
-            var result = await _booksService.GetByTitle(ttl);
+            var result = await _booksService.GetByTitle(title);
             return Ok(result);
         }
-
         [HttpPost]
         public IActionResult Create([FromBody] Book newBook)
         {

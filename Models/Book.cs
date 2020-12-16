@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Text.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace BookApp.Models
     {
         public string Title { get; set; }
         public int AuthorId { get; set; }
+        [JsonIgnore]
         public Author Author { get; set; }
         public int PublishedYear { get; set; }
         public int PageNumber { get; set; }

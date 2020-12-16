@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using BookApp.Models;
 
 namespace BookApp.Repository
 {
@@ -30,5 +31,6 @@ namespace BookApp.Repository
         bool Exists(Func<TEntity, bool> predicate);
         int DeleteAll();
         int Truncate();
+        IEnumerable<Book> GetAsQueryable(bool v, Func<IQueryable<Book>, IIncludableQueryable<Book, object>> p);
     }
 }

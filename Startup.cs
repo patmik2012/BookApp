@@ -29,9 +29,11 @@ namespace BookApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddScoped<IBookService, BookService>();
 
-            
+            services.AddScoped<IBookService, BookService>();
+            services.AddScoped<IAuthorService, AuthorService>();
+
+
             services.AddDbContext<BookDbContext>(options => options
                 .UseSqlServer(Configuration.GetConnectionString("BookDatabase")));
             

@@ -1,0 +1,74 @@
+﻿using BookApp.Models;
+using BookApp.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace BookApp.Services
+{
+    public interface IAuthorService
+    {
+        void Log(string message);
+        Task<IEnumerable<Author>> GetAll();
+        Author Get(int authorId);
+        Author Create(Author newAuthor);
+        Author Update(int authorId, Author updatedAuthor);
+        Task<IEnumerable<Author>> GetAllByName(string authorName);
+
+    };
+    public class AuthorService : AbstractService, IAuthorService
+    {
+        private readonly ILogger<AuthorService> _logger;
+        public AuthorService(IUnitOfWork unitOfWork, ILogger<AuthorService> logger) : base(unitOfWork)
+        {
+            _logger = logger;
+        }
+        public void Log(string message)
+        {
+            _logger.LogInformation("AuthorService log: " + message);
+        }
+
+        //api/authors/create
+        public Author Create(Author newAuthor)
+        {
+            Log("Create");
+            newAuthor.Id = 0;
+            UnitOfWork.GetRepository<Author>().Create(newAuthor);
+            UnitOfWork.SaveChanges();
+            return newAuthor;
+        }
+        //api/authors/get/1
+        public Author Get(int authorId)
+        {
+            Log("Get(" + authorId + ")");
+            return UnitOfWork.GetRepository<Author>()
+                .GetAsQueryable(a => a.Id == authorId && !a.Deleted).FirstOrDefault();
+        }
+        //api/authors/getall
+        public async Task<IEnumerable<Author>> GetAll()
+        {
+            Log("GetAll");
+            return UnitOfWork.GetRepository<Author>()
+                .GetAll().Where(a => !a.Deleted);
+        }
+
+        //api/authors/update
+        public Author Update(int authorId, Author updatedAuthor)
+        {
+            Log("Update (" + authorId + ")");
+            UnitOfWork.GetRepository<Author>().Update(authorId, updatedAuthor);
+            UnitOfWork.SaveChanges();
+            return updatedAuthor;
+        }
+        public async Task<IEnumerable<Author>> GetAllByName(string authorName)
+        {
+            Log("GetAllByName");
+            return UnitOfWork.GetRepository<Author>()
+                .GetAsQueryable(a => a.Name == authorName,
+                src => src.Include(a => a.Books));
+        }
+    }
+}

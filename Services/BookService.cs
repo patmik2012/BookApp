@@ -22,7 +22,7 @@ namespace BookApp.Services
         Task<IEnumerable<Book>> GetByTitle(string ttl);
         Book Create(Book newBook);
         Book Update(int BkId, Book updatedBook);
-        IEnumerable<Book> DeleteAsync(int BkId);
+        Task<IEnumerable<Book>> DeleteAsync(int BkId);
     }
 
     public class BookService : AbstractService, IBookService
@@ -91,10 +91,10 @@ namespace BookApp.Services
             //return _books.FirstOrDefault(b => b.Id == id);
             //return _bookDbContext.Books.FirstOrDefault(b => b.Id == id);
             return UnitOfWork.GetRepository<Book>()
-                .GetByIdWithInclude(id,src => src.Include(book => book.Author));
+                .GetByIdWithInclude(id, src => src.Include(bk => bk.Author));
         }
 
-
+        //api/books/create
         public Book Create(Book newBook)
         {
             Log("Create");
@@ -108,7 +108,7 @@ namespace BookApp.Services
             return newBook;
         }
 
-
+        //api/books/update/10
         public Book Update(int BkId, Book updatedBook)
         {
             Log("Update (" + BkId + ")");
@@ -139,11 +139,11 @@ namespace BookApp.Services
             //return _bookDbContext.Books;
         }
         */
-        //api/books/getByTitle/test
 
         //api/books/GetByTitle/test
         public async Task<IEnumerable<Book>> GetByTitle(string ttl)
         {
+            Log("GetByTitle(" + ttl + ")");
             //return await _bookDbContext.Books.Where(b => b.Title == title).ToListAsync();
             return UnitOfWork.GetRepository<Book>()
                 .GetAsQueryable(b => b.Title == ttl,
@@ -152,19 +152,22 @@ namespace BookApp.Services
     
         }
 
-
-        IEnumerable<Book> IBookService.DeleteAsync(int BkId)
+        //api/books/delete/10
+        public async Task<IEnumerable<Book>> DeleteAsync(int BkId)
         {
-            UnitOfWork.GetRepository<Book>().Delete(BkId);
+            Log("Delete(" + BkId + ")");
+            await UnitOfWork.GetRepository<Book>().Delete(BkId);
             UnitOfWork.SaveChanges();
-            return (IEnumerable<Book>)GetAll();
+            return await GetAll();
         }
 
         //api/books/GetByAuthor/1
-        Task<IEnumerable<Book>> IBookService.GetAllByAuthor(int authorId)
+        public async Task<IEnumerable<Book>> GetAllByAuthor(int authorId)
         {
-            return (Task<IEnumerable<Book>>)UnitOfWork.GetRepository<Book>()
-                .GetAsQueryable(b => b.AuthorId == authorId);
-        }
+            Log("GetAllByAuthor(" + authorId + ")");
+            return UnitOfWork.GetRepository<Book>()
+                .GetAsQueryable(b => b.AuthorId == authorId)
+                .OrderBy(book => book.PublishedYear);
+        }                
     }
 }
