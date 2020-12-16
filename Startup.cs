@@ -32,7 +32,7 @@ namespace BookApp
 
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IAuthorService, AuthorService>();
-
+            services.AddScoped<IBooksInStoresService, BooksInStoresService>();
 
             services.AddDbContext<BookDbContext>(options => options
                 .UseSqlServer(Configuration.GetConnectionString("BookDatabase")));

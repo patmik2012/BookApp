@@ -18,5 +18,9 @@ namespace BookApp.Models
         [MaxLength(13)]
         public string ISBN { get; set; }
         public bool Deleted { get; set; }
+        public int AgeLimit { get; set; }
+        [JsonIgnore]
+        public IList<BooksInStores> BooksInStores { get; set; }
+
     }
 }
