@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BookApp.DBContext;
 using BookApp.Models;
 using BookApp.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookApp.Controllers
 {
@@ -27,6 +28,7 @@ namespace BookApp.Controllers
 
         
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Book>>> GetAll()
         {
             var result = await _booksService.GetAll();
@@ -34,23 +36,27 @@ namespace BookApp.Controllers
         }
 
         [HttpGet("{BkId}")]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<Book>> Get(int BkId)
         {
             return Ok(_booksService.Get(BkId));
         }
         [HttpGet("{authorId}")]
+        [Authorize(Roles = "Administrator, User")]
         public async Task<ActionResult<IEnumerable<Book>>> GetAllByAuthor(int authorID)
         {
             var result = await _booksService.GetAllByAuthor(authorID);
             return Ok(result);
         }
         [HttpGet("{title}")]
+        [Authorize(Roles = "Administrator, User")]
         public async Task<ActionResult<IEnumerable<Book>>> GetByTitle(string title)
         {
             var result = await _booksService.GetByTitle(title);
             return Ok(result);
         }
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create([FromBody] Book newBook)
         {
             var book = _booksService.Create(newBook);
@@ -58,18 +64,21 @@ namespace BookApp.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Update(int BkId, [FromBody] Book updatedBook) 
         {
             return Ok(_booksService.Update(BkId, updatedBook));
         }
 
         [HttpDelete]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Delete(int BkId)
         {
             return Ok(_booksService.DeleteAsync(BkId));
         }
 
         [HttpGet("{year}")]
+        [Authorize(Roles = "Administrator, User")]
         public async Task<ActionResult<IEnumerable<Book>>> GetAllByPublishedYear(int year)
         {
             var result = await _booksService.GetAllByPublishedYear(year);

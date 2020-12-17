@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "ohH+/qYi8i2UBUHlUVTl3Lu5JXCKqZ52u+cR+IGrprbDWXSC5bB6kkUCGEwAKViookAje8qqO+2Jpr2+LoZHBQ==",
+  "dgSpecHash": "OODwgElBaSkWzYG2ffDgIt6cVqtinBUOA3bPtaVrTtv2gwxTFyqRH+wF2Lq1Tw6+5CyVlnQA6su6fIbgpleL/Q==",
   "success": true,
   "projectFilePath": "C:\\Users\\apatakm\\source\\repos\\BookApp\\BookApp.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\apatakm\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.10\\microsoft.aspnetcore.authentication.jwtbearer.3.1.10.nupkg.sha512",
     "C:\\Users\\apatakm\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.10\\microsoft.aspnetcore.cryptography.internal.3.1.10.nupkg.sha512",
     "C:\\Users\\apatakm\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\3.1.10\\microsoft.aspnetcore.cryptography.keyderivation.3.1.10.nupkg.sha512",
     "C:\\Users\\apatakm\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",

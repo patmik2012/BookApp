@@ -157,3 +157,4 @@ C:\Users\apatakm\source\repos\BookApp\bin\Debug\netcoreapp3.1\Microsoft.Bcl.Hash
 C:\Users\apatakm\source\repos\BookApp\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.dll
 C:\Users\apatakm\source\repos\BookApp\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Binder.dll
 C:\Users\apatakm\source\repos\BookApp\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\apatakm\source\repos\BookApp\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll

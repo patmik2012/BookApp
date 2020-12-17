@@ -10,9 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 
@@ -39,11 +41,56 @@ namespace BookApp
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IBooksInStoresService, BooksInStoresService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddIdentity<ApplicationUser, IdentityRole<int>>()
                     .AddEntityFrameworkStores<BookDbContext>()
                     .AddDefaultTokenProviders();
 
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Default SignIn settings.
+                options.SignIn.RequireConfirmedEmail = false;
+
+                // Password settings.
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+
+                // Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
+                // User settings.
+                options.User.AllowedUserNameCharacters =
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;
+            });
+
+            services.AddAuthentication()
+                .AddJwtBearer(cfg=>
+            services.AddAuthentication()
+                    .AddJwtBearer(cfg =>
+                    {
+                        cfg.RequireHttpsMetadata = false;
+                        cfg.SaveToken = true;
+                        cfg.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidIssuer = "https://localhost/",
+                            ValidateAudience = true,
+                            ValidAudience = "https://localhost/",
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SecretKey_123456")),
+                            ValidateIssuerSigningKey = true,
+                            ValidateLifetime = true,
+                            ClockSkew = TimeSpan.Zero // remove delay of token when expire
+                        };
+                    })
+                    );
 
         }
 
@@ -65,6 +112,7 @@ namespace BookApp
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
