@@ -1,9 +1,11 @@
 using BookApp.DBContext;
+using BookApp.Models;
 using BookApp.Services;
 using BookApp.UnitOfWork;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,14 +32,18 @@ namespace BookApp
         {
             services.AddControllersWithViews();
 
+            services.AddDbContext<BookDbContext>(options => options
+                .UseSqlServer(Configuration.GetConnectionString("BookDatabase")));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork<BookDbContext>>();
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IBooksInStoresService, BooksInStoresService>();
 
-            services.AddDbContext<BookDbContext>(options => options
-                .UseSqlServer(Configuration.GetConnectionString("BookDatabase")));
-            
-            services.AddScoped<IUnitOfWork, UnitOfWork<BookDbContext>>();
+            services.AddIdentity<ApplicationUser, IdentityRole<int>>()
+                    .AddEntityFrameworkStores<BookDbContext>()
+                    .AddDefaultTokenProviders();
+
 
         }
 

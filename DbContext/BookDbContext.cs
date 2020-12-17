@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookApp.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace BookApp.DBContext
 {
-    public class BookDbContext : DbContext
+    public class BookDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
+    //: DbContext
     {
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<BookStore> BookStores { get; set; }
         public DbSet<BooksInStores> BooksInStores { get; set; }
+        public DbSet <ApplicationUser> ApplicationUsers { get; set; }
 
         public BookDbContext(DbContextOptions<BookDbContext> options) : base(options)
         {
@@ -38,6 +42,8 @@ namespace BookApp.DBContext
                 .HasOne<BookStore>(BooksInStores => BooksInStores.bookStore)
                 .WithMany(b => b.BooksInStores)
                 .HasForeignKey(b => b.BookStoreId);
+
+            modelBuilder.Entity<ApplicationUser>().HasKey(appuser => appuser.Id);
 
             base.OnModelCreating(modelBuilder);
 
