@@ -9,6 +9,7 @@ using BookApp.DBContext;
 using BookApp.Models;
 using BookApp.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace BookApp.Controllers
 {
@@ -16,6 +17,8 @@ namespace BookApp.Controllers
     [Produces("application/json")]
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class BooksController : ControllerBase
     {
         private readonly IBookService _booksService;
@@ -26,7 +29,7 @@ namespace BookApp.Controllers
             _booksService = bookService;
         }
 
-        
+        //api/books/getall
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Book>>> GetAll()
@@ -35,12 +38,15 @@ namespace BookApp.Controllers
             return Ok(result);
         }
 
+        //api/books/5
         [HttpGet("{BkId}")]
         [AllowAnonymous]
         public ActionResult<IEnumerable<Book>> Get(int BkId)
         {
             return Ok(_booksService.Get(BkId));
         }
+
+        //api/books/GetByAuthor/1
         [HttpGet("{authorId}")]
         [Authorize(Roles = "Administrator, User")]
         public async Task<ActionResult<IEnumerable<Book>>> GetAllByAuthor(int authorID)
@@ -48,6 +54,8 @@ namespace BookApp.Controllers
             var result = await _booksService.GetAllByAuthor(authorID);
             return Ok(result);
         }
+
+        //api/books/GetByTitle/test
         [HttpGet("{title}")]
         [Authorize(Roles = "Administrator, User")]
         public async Task<ActionResult<IEnumerable<Book>>> GetByTitle(string title)
@@ -55,6 +63,8 @@ namespace BookApp.Controllers
             var result = await _booksService.GetByTitle(title);
             return Ok(result);
         }
+
+        //api/books/create
         [HttpPost]
         [Authorize(Roles = "Administrator")]
         public IActionResult Create([FromBody] Book newBook)
@@ -63,13 +73,15 @@ namespace BookApp.Controllers
             return Created($"{book.Id}", book);
         }
 
+        //api/books/update/10
         [HttpPut]
         [Authorize(Roles = "Administrator")]
         public IActionResult Update(int BkId, [FromBody] Book updatedBook) 
         {
             return Ok(_booksService.Update(BkId, updatedBook));
         }
-
+        
+        //api/books/delete/10
         [HttpDelete]
         [Authorize(Roles = "Administrator")]
         public IActionResult Delete(int BkId)
@@ -77,6 +89,7 @@ namespace BookApp.Controllers
             return Ok(_booksService.DeleteAsync(BkId));
         }
 
+        //api/books/GetAllByPublishedYear/2001
         [HttpGet("{year}")]
         [Authorize(Roles = "Administrator, User")]
         public async Task<ActionResult<IEnumerable<Book>>> GetAllByPublishedYear(int year)
@@ -85,6 +98,15 @@ namespace BookApp.Controllers
             return Ok(result);
         }
 
+        //api/books/GetAllByAgeLimit
+        [HttpGet]
+        [AllowAnonymous]
+        //[Authorize(Roles = "User")]
+        public async Task<ActionResult<IEnumerable<Book>>> GetAllByAgeLimit()
+        {
+            var result = await _booksService.GetAllByAgeLimit();
+            return Ok(result);
+        }
 
         /*============================
         //InMemory DB

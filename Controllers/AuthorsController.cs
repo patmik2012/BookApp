@@ -8,12 +8,16 @@ using BookApp.DBContext;
 using System.Linq;
 using System.Threading.Tasks;
 using BookApp.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace BookApp.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class AuthorsController : ControllerBase
     {
 

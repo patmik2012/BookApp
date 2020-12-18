@@ -24,6 +24,7 @@ namespace BookApp.Services
         Book Update(int BkId, Book updatedBook);
         Task<IEnumerable<Book>> DeleteAsync(int BkId);
         Task<IEnumerable<Book>> GetAllByPublishedYear(int year);
+        Task<IEnumerable<Book>> GetAllByAgeLimit();
     }
 
     public class BookService : AbstractService, IBookService
@@ -178,6 +179,14 @@ namespace BookApp.Services
             await UnitOfWork.GetRepository<Book>().Delete(BkId);
             UnitOfWork.SaveChanges();
             return await GetAll();
+        }
+
+        public async Task<IEnumerable<Book>> GetAllByAgeLimit()
+        {
+            Log("GetAllByAgeLimit");
+            return UnitOfWork.GetRepository<Book>()
+                .GetAsQueryable(b => b.AgeLimit > 0);
+
         }
     }
 }

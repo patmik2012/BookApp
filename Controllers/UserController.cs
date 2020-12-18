@@ -13,6 +13,8 @@ namespace BookApp.Controllers
     [Produces("application/json")]
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
