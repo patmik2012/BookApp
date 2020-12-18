@@ -31,6 +31,7 @@ namespace BookApp.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Author>>> GetAll()
         {
             var result = await _authorsService.GetAll();
@@ -38,12 +39,14 @@ namespace BookApp.Controllers
         }
 
         [HttpGet("{AuthorId}")]
+        [Authorize(Roles = "Administrator, User")]
         public ActionResult<IEnumerable<Author>> Get(int AuthorId)
         {
             return Ok(_authorsService.Get(AuthorId));
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create([FromBody] Author newAuthor)
         {
             var author = _authorsService.Create(newAuthor);
@@ -51,12 +54,14 @@ namespace BookApp.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Update(int AuthorId, [FromBody] Author updatedAuthor)
         {
             return Ok(_authorsService.Update(AuthorId, updatedAuthor));
         }
 
         [HttpGet("{authorName}")]
+        [Authorize(Roles = "Administrator, User")]
         public async Task<ActionResult<IEnumerable<Author>>> GetAllByNameAsync(string authorName)
         {
             var result = await _authorsService.GetAllByNameAsync(authorName);

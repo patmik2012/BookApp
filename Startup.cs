@@ -1,7 +1,9 @@
+using BookApp.Auth;
 using BookApp.DBContext;
 using BookApp.Models;
 using BookApp.Services;
 using BookApp.UnitOfWork;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -81,16 +83,23 @@ namespace BookApp
                         cfg.TokenValidationParameters = new TokenValidationParameters
                         {
                             ValidateIssuer = true,
-                            ValidIssuer = "https://localhost/",
+                            ValidIssuer = Token.Issuer,
                             ValidateAudience = true,
-                            ValidAudience = "https://localhost/",
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SecretKey_123456")),
+                            ValidAudience = Token.Audience,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Token.SecretKey)),
                             ValidateIssuerSigningKey = true,
                             ValidateLifetime = true,
                             ClockSkew = TimeSpan.Zero // remove delay of token when expire
                         };
                     })
-                    );
+                 );
+            
+            services.AddAuthorization(options => {
+                options.AddPolicy("AtLeast12", policy => {
+                    policy.Requirements.Add(new AtLeast12Requirement(12));
+                });
+            });
+            services.AddScoped<IAuthorizationHandler, AtLeast12Handler>();
 
         }
 

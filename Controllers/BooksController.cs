@@ -40,7 +40,8 @@ namespace BookApp.Controllers
 
         //api/books/5
         [HttpGet("{BkId}")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrator, User")]
+        [Authorize(Policy = "AtLeast12")]
         public ActionResult<IEnumerable<Book>> Get(int BkId)
         {
             return Ok(_booksService.Get(BkId));
@@ -100,8 +101,7 @@ namespace BookApp.Controllers
 
         //api/books/GetAllByAgeLimit
         [HttpGet]
-        [AllowAnonymous]
-        //[Authorize(Roles = "User")]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<IEnumerable<Book>>> GetAllByAgeLimit()
         {
             var result = await _booksService.GetAllByAgeLimit();

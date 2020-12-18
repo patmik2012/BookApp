@@ -25,12 +25,14 @@ namespace BookApp.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<BooksInStores>>> GetAll()
         {
             var result = await _booksInStoresService.GetAll();
             return Ok(result);
         }
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create([FromBody] BooksInStores newBooksInStores)
         {
             var BooksInStores = _booksInStoresService.Create(newBooksInStores);

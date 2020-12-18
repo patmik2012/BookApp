@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using BookApp.Auth;
 using BookApp.Models;
 using BookApp.Models.Communication;
 using Microsoft.AspNetCore.Identity;
@@ -112,14 +113,14 @@ namespace BookApp.Services
 
         private async Task<string> GenerateJwtToken(ApplicationUser user)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SecretKey_123456"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Token.SecretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddDays(Convert.ToDouble(30));
 
             var id = await GetClaimsIdentity(user);
             var token = new JwtSecurityToken(
-                "https://localhost", 
-                "https://localhost", 
+                Token.Issuer, 
+                Token.Audience, 
                 id.Claims, 
                 expires: expires, 
                 signingCredentials: creds);

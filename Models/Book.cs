@@ -21,6 +21,5 @@ namespace BookApp.Models
         public int AgeLimit { get; set; }
         [JsonIgnore]
         public IList<BooksInStores> BooksInStores { get; set; }
-
     }
 }
