@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookApp.UnitOfWork;
+using BookApp.Auth;
 
 namespace BookApp.Services
 {
@@ -176,7 +177,10 @@ namespace BookApp.Services
         public async Task<IEnumerable<Book>> DeleteAsync(int BkId)
         {
             Log("Delete(" + BkId + ")");
-            await UnitOfWork.GetRepository<Book>().Delete(BkId);
+            var book = UnitOfWork.GetRepository<Book>()
+                .GetByIdWithInclude(BkId, src => src.Include(bk => bk.Author));
+            book.Deleted = true;
+            //await UnitOfWork.GetRepository<Book>().Delete(BkId);            
             UnitOfWork.SaveChanges();
             return await GetAll();
         }
@@ -185,7 +189,7 @@ namespace BookApp.Services
         {
             Log("GetAllByAgeLimit");
             return UnitOfWork.GetRepository<Book>()
-                .GetAsQueryable(b => b.AgeLimit > 0);
+                .GetAsQueryable(b => b.AgeLimit > Policies.AgeLimit);
 
         }
     }

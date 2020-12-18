@@ -29,7 +29,8 @@ namespace BookApp.Controllers
         {
             _authorsService = authorService;
         }
-
+        
+        //api/authors/getall
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Author>>> GetAll()
@@ -38,6 +39,7 @@ namespace BookApp.Controllers
             return Ok(result);
         }
 
+        //api/authors/get/1
         [HttpGet("{AuthorId}")]
         [Authorize(Roles = "Administrator, User")]
         public ActionResult<IEnumerable<Author>> Get(int AuthorId)
@@ -45,6 +47,7 @@ namespace BookApp.Controllers
             return Ok(_authorsService.Get(AuthorId));
         }
 
+        //api/authors/create
         [HttpPost]
         [Authorize(Roles = "Administrator")]
         public IActionResult Create([FromBody] Author newAuthor)
@@ -53,6 +56,7 @@ namespace BookApp.Controllers
             return Created($"{author.Id}", author);
         }
 
+        //api/authors/update
         [HttpPut]
         [Authorize(Roles = "Administrator")]
         public IActionResult Update(int AuthorId, [FromBody] Author updatedAuthor)
@@ -60,12 +64,21 @@ namespace BookApp.Controllers
             return Ok(_authorsService.Update(AuthorId, updatedAuthor));
         }
 
+        //api/authors/GetAllByName/testauthor
         [HttpGet("{authorName}")]
         [Authorize(Roles = "Administrator, User")]
         public async Task<ActionResult<IEnumerable<Author>>> GetAllByNameAsync(string authorName)
         {
             var result = await _authorsService.GetAllByNameAsync(authorName);
             return Ok(result);
+        }
+
+        //api/authors/delete/4
+        [HttpDelete("{authorId}")]
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Delete(int authorId)
+        {
+            return Ok(_authorsService.DeleteAsync(authorId));
         }
     }
 }

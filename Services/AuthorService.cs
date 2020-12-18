@@ -17,6 +17,7 @@ namespace BookApp.Services
         Author Create(Author newAuthor);
         Author Update(int authorId, Author updatedAuthor);
         Task<Author> GetAllByNameAsync(string authorName);
+        Task<IEnumerable<Author>> DeleteAsync(int authorId);
 
 
     };
@@ -73,6 +74,17 @@ namespace BookApp.Services
             return await UnitOfWork.GetRepository<Author>().GetAsQueryable()
                 .Include(author => author.Books)
                 .FirstOrDefaultAsync(author => author.Name == authorName);
+        }
+
+        //api/authors/delete/4
+        public async Task<IEnumerable<Author>> DeleteAsync(int authorId)
+        {
+            Log("Delete(" + authorId + ")");
+            var author = UnitOfWork.GetRepository<Author>()
+                .GetAsQueryable(a => a.Id == authorId).FirstOrDefault();
+            author.Deleted = true;
+            UnitOfWork.SaveChanges();
+            return await GetAll();
         }
     }
 }

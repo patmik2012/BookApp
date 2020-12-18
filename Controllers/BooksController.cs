@@ -83,7 +83,7 @@ namespace BookApp.Controllers
         }
         
         //api/books/delete/10
-        [HttpDelete]
+        [HttpDelete("{BkId}")]
         [Authorize(Roles = "Administrator")]
         public IActionResult Delete(int BkId)
         {
