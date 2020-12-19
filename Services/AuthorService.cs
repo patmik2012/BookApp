@@ -81,7 +81,7 @@ namespace BookApp.Services
         {
             Log("Delete(" + authorId + ")");
             var author = UnitOfWork.GetRepository<Author>()
-                .GetAsQueryable(a => a.Id == authorId).FirstOrDefault();
+                .GetByIdWithInclude(authorId, src => src.Include(a => a.Books));
             author.Deleted = true;
             UnitOfWork.SaveChanges();
             return await GetAll();

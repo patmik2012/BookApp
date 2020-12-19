@@ -83,7 +83,8 @@ namespace BookApp.Services
             Log("GetAll");
             //return _books;
             //return await _bookDbContext.Books.ToListAsync();
-            return UnitOfWork.GetRepository<Book>().GetAll();
+            return UnitOfWork.GetRepository<Book>()
+                .GetAll().Where(b => !b.Deleted);
         }
 
 
@@ -94,7 +95,7 @@ namespace BookApp.Services
             //return _books.FirstOrDefault(b => b.Id == id);
             //return _bookDbContext.Books.FirstOrDefault(b => b.Id == id);
             return UnitOfWork.GetRepository<Book>()
-                .GetByIdWithInclude(id, src => src.Include(bk => bk.Author));
+                .GetByIdWithInclude(id, src => src.Include(b => b.Author));
         }
 
         //api/books/create

@@ -102,6 +102,7 @@ namespace BookApp.Controllers
         //api/books/GetAllByAgeLimit
         [HttpGet]
         [Authorize(Roles = "User")]
+        [Authorize(Policy = "AtLeast12")]
         public async Task<ActionResult<IEnumerable<Book>>> GetAllByAgeLimit()
         {
             var result = await _booksService.GetAllByAgeLimit();
