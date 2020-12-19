@@ -11,7 +11,7 @@ namespace BookApp.Auth
         public const string Admin = "Admin";
         public const string User = "User";
         public const string UserAndAdmin = "UserAndAdmin";
-        public const string Adult = "Adult";
+        public const string AtLeast12 = "AtLeast12";
         public const int AgeLimit = 12;
 
         public static AuthorizationPolicy UserPolicy()

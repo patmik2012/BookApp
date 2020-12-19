@@ -42,6 +42,7 @@ namespace BookApp.Controllers
         [HttpGet("{BkId}")]
         [Authorize(Roles = "Administrator, User")]
         [Authorize(Policy = "AtLeast12")]
+//        [AllowAnonymous]
         public ActionResult<IEnumerable<Book>> Get(int BkId)
         {
             return Ok(_booksService.Get(BkId));
@@ -50,6 +51,7 @@ namespace BookApp.Controllers
         //api/books/GetByAuthor/1
         [HttpGet("{authorId}")]
         [Authorize(Roles = "Administrator, User")]
+//        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Book>>> GetAllByAuthor(int authorID)
         {
             var result = await _booksService.GetAllByAuthor(authorID);
@@ -58,6 +60,7 @@ namespace BookApp.Controllers
 
         //api/books/GetByTitle/test
         [HttpGet("{title}")]
+//        [AllowAnonymous]
         [Authorize(Roles = "Administrator, User")]
         public async Task<ActionResult<IEnumerable<Book>>> GetByTitle(string title)
         {
@@ -68,6 +71,7 @@ namespace BookApp.Controllers
         //api/books/create
         [HttpPost]
         [Authorize(Roles = "Administrator")]
+//        [AllowAnonymous]
         public IActionResult Create([FromBody] Book newBook)
         {
             var book = _booksService.Create(newBook);
@@ -76,6 +80,7 @@ namespace BookApp.Controllers
 
         //api/books/update/10
         [HttpPut]
+//        [AllowAnonymous]
         [Authorize(Roles = "Administrator")]
         public IActionResult Update(int BkId, [FromBody] Book updatedBook) 
         {
@@ -84,6 +89,7 @@ namespace BookApp.Controllers
         
         //api/books/delete/10
         [HttpDelete("{BkId}")]
+//        [AllowAnonymous]
         [Authorize(Roles = "Administrator")]
         public IActionResult Delete(int BkId)
         {
@@ -92,6 +98,7 @@ namespace BookApp.Controllers
 
         //api/books/GetAllByPublishedYear/2001
         [HttpGet("{year}")]
+//        [AllowAnonymous]
         [Authorize(Roles = "Administrator, User")]
         public async Task<ActionResult<IEnumerable<Book>>> GetAllByPublishedYear(int year)
         {
@@ -99,10 +106,21 @@ namespace BookApp.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{year}/{authorId}")]
+//        [AllowAnonymous]
+        [Authorize(Roles = "Administrator, User")]
+        public async Task<ActionResult<IEnumerable<Book>>> GetAllByPublishedYearAuthor(int year, int authorId)
+        {
+            var result = await _booksService.GetAllByPublishedYearAuthor(year,authorId);
+            return Ok(result);
+        }
+
+
         //api/books/GetAllByAgeLimit
         [HttpGet]
-        [Authorize(Roles = "User")]
-        [Authorize(Policy = "AtLeast12")]
+        [AllowAnonymous]
+//        [Authorize(Roles = "User")]
+//        [Authorize(Policy = "AtLeast12")]
         public async Task<ActionResult<IEnumerable<Book>>> GetAllByAgeLimit()
         {
             var result = await _booksService.GetAllByAgeLimit();

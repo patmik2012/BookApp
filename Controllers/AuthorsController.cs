@@ -41,6 +41,7 @@ namespace BookApp.Controllers
 
         //api/authors/get/1
         [HttpGet("{AuthorId}")]
+//        [AllowAnonymous]
         [Authorize(Roles = "Administrator, User")]
         public ActionResult<IEnumerable<Author>> Get(int AuthorId)
         {
@@ -49,6 +50,7 @@ namespace BookApp.Controllers
 
         //api/authors/create
         [HttpPost]
+//        [AllowAnonymous]
         [Authorize(Roles = "Administrator")]
         public IActionResult Create([FromBody] Author newAuthor)
         {
@@ -58,6 +60,7 @@ namespace BookApp.Controllers
 
         //api/authors/update
         [HttpPut]
+//        [AllowAnonymous]
         [Authorize(Roles = "Administrator")]
         public IActionResult Update(int AuthorId, [FromBody] Author updatedAuthor)
         {
@@ -66,6 +69,7 @@ namespace BookApp.Controllers
 
         //api/authors/GetAllByName/testauthor
         [HttpGet("{authorName}")]
+//        [AllowAnonymous]
         [Authorize(Roles = "Administrator, User")]
         public async Task<ActionResult<IEnumerable<Author>>> GetAllByNameAsync(string authorName)
         {
@@ -75,6 +79,7 @@ namespace BookApp.Controllers
 
         //api/authors/delete/4
         [HttpDelete("{authorId}")]
+//        [AllowAnonymous]
         [Authorize(Roles = "Administrator")]
         public IActionResult Delete(int authorId)
         {

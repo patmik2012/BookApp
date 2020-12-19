@@ -26,6 +26,7 @@ namespace BookApp.Services
         Task<IEnumerable<Book>> DeleteAsync(int BkId);
         Task<IEnumerable<Book>> GetAllByPublishedYear(int year);
         Task<IEnumerable<Book>> GetAllByAgeLimit();
+        Task<IEnumerable<Book>> GetAllByPublishedYearAuthor(int year, int authorId);
     }
 
     public class BookService : AbstractService, IBookService
@@ -95,7 +96,8 @@ namespace BookApp.Services
             //return _books.FirstOrDefault(b => b.Id == id);
             //return _bookDbContext.Books.FirstOrDefault(b => b.Id == id);
             return UnitOfWork.GetRepository<Book>()
-                .GetByIdWithInclude(id, src => src.Include(b => b.Author));
+                .GetByIdWithInclude(id,src => src.Include(b => b.Author))
+;
         }
 
         //api/books/create
@@ -172,6 +174,15 @@ namespace BookApp.Services
             return UnitOfWork.GetRepository<Book>()
                 .GetAsQueryable(b => b.PublishedYear == year)
                 .OrderBy(book => book.PublishedYear);
+        }
+
+        //api/books/GetAllByPublishedYear/2001
+        public async Task<IEnumerable<Book>> GetAllByPublishedYearAuthor(int year, int authorId)
+        {
+            Log("GetAllByPublishedYear(" + year + ")");
+            return UnitOfWork.GetRepository<Book>()
+                .GetAsQueryable(b => b.PublishedYear == year)
+                .Where(b => b.AuthorId == authorId);
         }
 
         //api/books/delete/10

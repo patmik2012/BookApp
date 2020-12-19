@@ -32,6 +32,7 @@ namespace BookApp.Controllers
             return Ok(result);
         }
         [HttpPost]
+//        [AllowAnonymous]
         [Authorize(Roles = "Administrator")]
         public IActionResult Create([FromBody] BooksInStores newBooksInStores)
         {
